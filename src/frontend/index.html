@@ -20,52 +20,13 @@
         </div>
     </nav>	
 
-    <!-- Main content with two centered cards -->
+    <!-- Main content with dynamically added cards -->
     <div class="container" style="margin-top: 50px;">
-        <div class="row">
-            <!-- First card with switch -->
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title">
-                            <i class="material-icons left">devices</i>
-                            Control de Dispositivo
-                        </span>
-                        <p>Esta tarjeta permite activar o desactivar el dispositivo. Usa el switch para controlar el estado.</p>
-                    </div>
-                    <div class="card-action" style="display: flex; align-items: center; justify-content: space-between;">
-                        <div class="switch">
-                            <label>
-                                Off
-                                <input type="checkbox">
-                                <span class="lever"></span>
-                                On
-                            </label>
-                        </div>
-                        <button class="btn red remove-btn" data-id="device-1" style="margin-left: 10px;">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Second card with slider -->
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title">
-                            <i class="material-icons left">tune</i>
-                            Ajuste de Valor
-                        </span>
-                        <p>Esta tarjeta permite ajustar el valor con un slider. Valor actual: <span id="sliderDisplay">50</span></p>
-                    </div>
-                    <div class="card-action" style="display: flex; align-items: center; justify-content: space-between;">
-                        <p class="range-field" style="flex: 1;">
-                            <input type="range" id="sliderValue" min="0" max="100" value="50"/>
-                        </p>
-                        <button class="btn red remove-btn" data-id="device-2" style="margin-left: 10px;">Eliminar</button>
-                    </div>
-                </div>
-            </div>
+        <div class="row" id="deviceCardsContainer">
+            <!-- Aquí se agregarán dinámicamente las tarjetas de dispositivos -->
         </div>
+
+        
 
         <!-- Button to open modal -->
         <div class="row">
@@ -74,12 +35,12 @@
             </div>
         </div>
 
-       
         <!-- Modal -->
         <div id="deviceModal" class="modal">
             <div class="modal-content">
                 <span id="closeModalBtn" class="close-btn">&times;</span>
                 <h2>Crear Dispositivo</h2>
+                
                 <label for="deviceName">Nombre del Dispositivo:</label>
                 <input type="text" id="deviceName" placeholder="Nombre">
         
@@ -98,10 +59,6 @@
                 <button id="cancelBtn" class="cancel-btn">Cancelar</button>
             </div>
         </div>
-        
-        
-        
-
     </div>
 
     <!-- Footer -->
@@ -124,7 +81,6 @@
         </div>
     </footer>
 
-        <script src="js/main.js"></script>
-  
+    <script src="js/main.js"></script>
 </body>
 </html>
