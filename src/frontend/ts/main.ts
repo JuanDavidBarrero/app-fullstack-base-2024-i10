@@ -1,128 +1,81 @@
-class Main implements EventListenerObject {
-    private nombre: string = "matias";
-    private users: Array<Usuario> = new Array();
-
+class DeviceManager {
     constructor() {
-        this.users.push(new Usuario('mramos', '123132'));
-        
-        let btn = this.recuperarElemento("btn");
-        btn.addEventListener('click', this);
-        let btnBuscar = this.recuperarElemento("btnBuscar");
-        btnBuscar.addEventListener('click', this);
-        let btnLogin = this.recuperarElemento("btnLogin");
-        btnLogin.addEventListener('click', this);
-        let btnPost = this.recuperarElemento("btnPost");
-        btnPost.addEventListener('click', this);
+        this.init();
     }
-    handleEvent(object: Event): void {
-        let idDelElemento = (<HTMLElement>object.target).id;
-        if (idDelElemento == 'btn') {
-            let divLogin = this.recuperarElemento("divLogin");
-            divLogin.hidden = false;
-        } else if (idDelElemento === 'btnBuscar') {
-            console.log("Buscando!")
-            this.buscarDevices();
-        } else if (idDelElemento ==='btnLogin'){
-            console.log("login")
-            let iUser = this.recuperarElemento("userName");
-            let iPass = this.recuperarElemento("userPass");
-            let usuarioNombre:string = iUser.value;
-            let usuarioPassword: string = iPass.value;
-            
-            if (usuarioNombre.length >= 4 && usuarioPassword.length >= 6) {
-                console.log("Voy al servidor... ejecuto consulta")
-                let usuario: Usuario = new Usuario(usuarioNombre, usuarioPassword);
-                let checkbox = this.recuperarElemento("cbRecor");
-                
-                console.log(usuario, checkbox.checked);
-                iUser.disabled = true;  
-                (<HTMLInputElement>object.target).disabled = true;
-                let divLogin = this.recuperarElemento("divLogin");
-                divLogin.hidden = true;
-            } else {
-                alert("El usuario o la contraseña son icorrectas");
-            }
-        } else if (idDelElemento == 'btnPost') {
-            let xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = () => {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                    console.log("se ejecuto el post", xmlHttp.responseText);
+
+    private init() {
+        document.addEventListener('DOMContentLoaded', () => {
+            this.setupRemoveButtons();
+            this.setupSlider();
+            this.setupModal();
+            this.setupCreateDeviceButton();
+        });
+    }
+
+    private setupRemoveButtons() {
+        const removeBtns = document.querySelectorAll('.remove-btn');
+        removeBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                if (id) {
+                    this.removeDevice(id);
                 }
-            }
-           
-            xmlHttp.open("POST", "http://localhost:8000/usuario", true);
-            
-            xmlHttp.setRequestHeader("Content-Type", "application/json"); 
-            xmlHttp.setRequestHeader("otracosa", "algo"); 
-            
-
-            let json = {name: 'mramos' };
-            xmlHttp.send(JSON.stringify(json));
-
-
-        }
-        
+            });
+        });
     }
 
-    private buscarDevices(): void {
-        let xmlHttp = new XMLHttpRequest();
-
-        xmlHttp.onreadystatechange = () => {
-            if (xmlHttp.readyState == 4) {
-                if (xmlHttp.status == 200) {
-                    let ul = this.recuperarElemento("list")
-                    let listaDevices: string = '';
-                   
-                    let lista: Array<Device> = JSON.parse(xmlHttp.responseText);
-        
-                    for (let item of lista) {
-                        listaDevices += `
-                        <li class="collection-item avatar">
-                        <img src="./static/images/lightbulb.png" alt="" class="circle">
-                        <span class="title">${item.name}</span>
-                        <p>${item.description} 
-                        </p>
-                        <a href="#!" class="secondary-content">
-                          <div class="switch">
-                              <label>
-                                Off`;
-                        if (item.state) {
-                            listaDevices +='<input type="checkbox" checked>'
-                        } else {
-                            listaDevices +='<input type="checkbox">'
-                        }
-                        listaDevices += `      
-                                <span class="lever"></span>
-                                On
-                              </label>
-                            </div>
-                      </a>
-                      </li>`
-                     
-                        
-                    }
-                    ul.innerHTML = listaDevices;
-                } else {
-                    alert("ERROR en la consulta");
-                }
-            }
-            
+    private removeDevice(id: string) {
+        alert(`Hola Mundo! ID: ${id}`);
+        const card = document.querySelector(`button[data-id="${id}"]`)?.closest('.card');
+        if (card) {
+            card.parentElement?.removeChild(card);
         }
-
-        xmlHttp.open("GET", "http://localhost:8000/devices", true);
-
-        xmlHttp.send();
-
-        
     }
 
-    private recuperarElemento(id: string):HTMLInputElement {
-        return <HTMLInputElement>document.getElementById(id);
+    private setupSlider() {
+        const slider = document.getElementById('sliderValue') as HTMLInputElement;
+        const sliderDisplay = document.getElementById('sliderDisplay') as HTMLElement;
+
+        slider.addEventListener('input', () => {
+            sliderDisplay.textContent = slider.value;
+        });
+    }
+
+    private setupModal() {
+        document.getElementById('openModalBtn')?.addEventListener('click', () => {
+            const modal = document.getElementById('deviceModal');
+            if (modal) {
+                modal.style.display = 'block'; 
+            }
+        });
+
+        document.getElementById('closeModalBtn')?.addEventListener('click', () => {
+            this.closeModal();
+        });
+
+        document.getElementById('cancelBtn')?.addEventListener('click', () => {
+            this.closeModal();
+        });
+    }
+
+    private closeModal() {
+        const modal = document.getElementById('deviceModal');
+        if (modal) {
+            modal.style.display = 'none'; 
+        }
+    }
+
+    private setupCreateDeviceButton() {
+        document.getElementById('createDeviceBtn')?.addEventListener('click', () => {
+            const deviceName = (document.getElementById('deviceName') as HTMLInputElement).value;
+            const deviceDescription = (document.getElementById('deviceDescription') as HTMLInputElement).value;
+            const isSwitch = (document.getElementById('isSwitch') as HTMLInputElement).checked; // Obtener el valor del switch
+
+            console.log(`Dispositivo Creado: ${deviceName}, Descripción: ${deviceDescription}, ¿Es Switch?: ${isSwitch}`);
+            this.closeModal();
+        });
     }
 }
-window.addEventListener('load', () => {
-    
-    let main: Main = new Main();
-    
-});
 
+// Instanciar la clase
+new DeviceManager();

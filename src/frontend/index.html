@@ -1,103 +1,130 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <link type="text/css" rel="stylesheet" href="./static/css/materialize.min.css"  media="screen,projection"/>
-      <link type="text/css" rel="stylesheet" href="./static/css/styles.css"  media="screen,projection"/>
-      <script type="text/javascript" src="./static/js/materialize.min.js"></script>
-      <script src="js/user.js"></script>
-      <script type="text/javascript" src="js/main.js"></script>
-      
+<html lang="es">
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="./static/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="./static/css/styles.css" media="screen,projection"/>
+    <script type="text/javascript" src="./static/js/materialize.min.js"></script>
     
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
 
-        <main>
-            <!-- Navigation bar -->
-            <nav style="background-color:#124580">
-                <div id="xx" class="nav-wrapper">
-                    <a href="#!" class="brand-logo left" style="margin-left: 15px;">Smart Home</a>
-                    <ul id="nav-mobile" class="right" style="margin-right: 15px;">
-                        <li><a href="#">Help</a></li>
-                    </ul>
-                </div>
-            </nav>	
-            <!-- Page Body -->
-            <div class="container">
-                <br/>
-                <h1 id="tit">texto</h1>
-                <h3>Smart Home Web asdas!</h3>
-              
-                <br/>
-                <input id="txt" type="text" value="valor1"/>
-                <div class="row">
-                    <div class="input-field col s12 m12 l6 xl6"  hidden id="divLogin">
-                        <div class="row">
-                            <div class="input-field col s6 m6 l6 xl6">
-                                <input placeholder="JDON" id="userName" type="text">
-                                <label for="userName">Nombre de Usuario</label>
-                            </div>
-                            <div class="input-field col s6 m6 l6 xl6">
-                                <input  id="userPass" type="password">
-                                <label for="userPass">Contraseña</label>
-                            </div>
-                            <div>
-                                <p>
-                                    <label>
-                                      <input type="checkbox" id="cbRecor" />
-                                      <span>Rercordarme</span>
-                                    </label>
-                                  </p>
-                            </div>
-                            <div>
-                                <button id="btnLogin" class="btn-large waves-effect waves-light" type="button">
-                                Ingresar
-                                <i class="material-icons left">face</i>
-                                </button>
-                            </div>
+    <!-- Header (Navigation bar) -->
+    <nav style="background-color:#124580">
+        <div id="xx" class="nav-wrapper">
+            <a href="#!" class="brand-logo left" style="margin-left: 15px;">Smart Home</a>
+            <ul id="nav-mobile" class="right" style="margin-right: 15px;">
+                <li><a href="#">Help</a></li>
+            </ul>
+        </div>
+    </nav>	
+
+    <!-- Main content with two centered cards -->
+    <div class="container" style="margin-top: 50px;">
+        <div class="row">
+            <!-- First card with switch -->
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">
+                            <i class="material-icons left">devices</i>
+                            Control de Dispositivo
+                        </span>
+                        <p>Esta tarjeta permite activar o desactivar el dispositivo. Usa el switch para controlar el estado.</p>
+                    </div>
+                    <div class="card-action" style="display: flex; align-items: center; justify-content: space-between;">
+                        <div class="switch">
+                            <label>
+                                Off
+                                <input type="checkbox">
+                                <span class="lever"></span>
+                                On
+                            </label>
                         </div>
-                        <textarea id="textarea_1" class="materialize-textarea" style="height: 150px;" readonly></textarea>
-                    </div>
-                    <div class="col s12 m12 l6 xl6">
-                        <ul  id="list" class="collection">
-                          
-                            
-                          
-                        </ul>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="col s4 m4 l2 xl2">
-                    
-                        <button id="btn" class="btn waves-effect waves-light button-view"  name="hello_button">PRESS ME</button>
-                        <button id="btnBuscar" class="btn waves-effect waves-light button-view"  name="hello_button">Buscar</button>
-                        <button id="btnPost" class="btn waves-effect waves-light button-view"  name="hello_button">Ejecutar POST</button>
-                    </div>
-                </div>
-            </div>	
-        </main>
-		<!-- Page Footer -->
-        <footer class="page-footer" style="background-color:#124580">
-            <div class="container">
-                <div class="row">
-                    <div class="col l6 s6">
-                        <h5 class="white-text">Smart Home</h5>
-                        <p class="grey-text text-lighten-4">Copyright ### - 2021</p>
-                    </div>
-                    <div class="col l6 s6">
-                        <h5 class="white-text right-align">Contact</h5>
-                        <p class="white-text right-align">
-                            <a class="grey-text text-lighten-3" href="!#">Email | </a>
-                            <a class="grey-text text-lighten-3" href="!#">Twitter | </a>
-                            <a class="grey-text text-lighten-3" href="!#">LinkedIn</a>
-                        </p>
+                        <button class="btn red remove-btn" data-id="device-1" style="margin-left: 10px;">Eliminar</button>
                     </div>
                 </div>
             </div>
-        </footer>
-		<!--JavaScript at end of body for optimized loading-->
+
+            <!-- Second card with slider -->
+            <div class="col s12 m6">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">
+                            <i class="material-icons left">tune</i>
+                            Ajuste de Valor
+                        </span>
+                        <p>Esta tarjeta permite ajustar el valor con un slider. Valor actual: <span id="sliderDisplay">50</span></p>
+                    </div>
+                    <div class="card-action" style="display: flex; align-items: center; justify-content: space-between;">
+                        <p class="range-field" style="flex: 1;">
+                            <input type="range" id="sliderValue" min="0" max="100" value="50"/>
+                        </p>
+                        <button class="btn red remove-btn" data-id="device-2" style="margin-left: 10px;">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Button to open modal -->
+        <div class="row">
+            <div class="col s12">
+                <button id="openModalBtn" class="btn">Agregar Dispositivo</button>
+            </div>
+        </div>
+
+       
+        <!-- Modal -->
+        <div id="deviceModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModalBtn" class="close-btn">&times;</span>
+                <h2>Crear Dispositivo</h2>
+                <label for="deviceName">Nombre del Dispositivo:</label>
+                <input type="text" id="deviceName" placeholder="Nombre">
         
-    </body>
-  </html>
+                <label for="deviceDescription">Descripción del Dispositivo:</label>
+                <input type="text" id="deviceDescription" placeholder="Descripción">
+        
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="isSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <label for="isSwitch">¿Es Switch?</label>
+                </div>
+        
+                <button id="createDeviceBtn">Crear Dispositivo</button>
+                <button id="cancelBtn" class="cancel-btn">Cancelar</button>
+            </div>
+        </div>
+        
+        
+        
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer" style="background-color:#124580">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s6">
+                    <h5 class="white-text">Smart Home</h5>
+                    <p class="grey-text text-lighten-4">Copyright ### - 2021</p>
+                </div>
+                <div class="col l6 s6">
+                    <h5 class="white-text right-align">Contact</h5>
+                    <p class="white-text right-align">
+                        <a class="grey-text text-lighten-3" href="!#">Email | </a>
+                        <a class="grey-text text-lighten-3" href="!#">Twitter | </a>
+                        <a class="grey-text text-lighten-3" href="!#">LinkedIn</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+        <script src="js/main.js"></script>
+  
+</body>
+</html>

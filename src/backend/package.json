@@ -9,6 +9,7 @@
   "author": "Agustin Bassi, Brian Ducca",
   "license": "MIT",
   "dependencies": {
+    "daw_project": "file:",
     "express": "^4.17.1",
     "mysql": "^2.18.1"
   }
