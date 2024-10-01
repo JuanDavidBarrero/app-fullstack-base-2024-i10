@@ -5,9 +5,8 @@ class DeviceManager {
 
     private init() {
         document.addEventListener('DOMContentLoaded', async () => {
-            await this.loadDevices(); 
+            await this.loadDevices();
             this.setupRemoveButtons();
-            this.setupSlider();
             this.setupModal();
             this.setupCreateDeviceButton();
         });
@@ -15,7 +14,7 @@ class DeviceManager {
 
     private async loadDevices() {
         try {
-            const response = await fetch('http://localhost:4000/api/device'); 
+            const response = await fetch('http://localhost:4000/api/device');
             const devices = await response.json();
             devices.forEach((device: any) => {
                 this.createDeviceCard(device.name, device.description, device.iscardswitch, device.id);
@@ -31,7 +30,7 @@ class DeviceManager {
             button.addEventListener('click', async () => {
                 const id = button.getAttribute('data-id');
                 if (id) {
-                    await this.removeDevice(id); 
+                    await this.removeDevice(id);
                 }
             });
         });
@@ -39,7 +38,6 @@ class DeviceManager {
 
     private async removeDevice(id: string) {
         try {
-            // Realizar la llamada DELETE a la API
             const response = await fetch(`http://localhost:4000/api/device/${id}`, {
                 method: 'DELETE'
             });
@@ -57,20 +55,11 @@ class DeviceManager {
         }
     }
 
-    private setupSlider() {
-        const slider = document.getElementById('sliderValue') as HTMLInputElement;
-        const sliderDisplay = document.getElementById('sliderDisplay') as HTMLElement;
-
-        slider?.addEventListener('input', () => {
-            sliderDisplay.textContent = slider.value;
-        });
-    }
-
     private setupModal() {
         document.getElementById('openModalBtn')?.addEventListener('click', () => {
             const modal = document.getElementById('deviceModal');
             if (modal) {
-                modal.style.display = 'block'; 
+                modal.style.display = 'block';
             }
         });
 
@@ -86,7 +75,7 @@ class DeviceManager {
     private closeModal() {
         const modal = document.getElementById('deviceModal');
         if (modal) {
-            modal.style.display = 'none'; 
+            modal.style.display = 'none';
         }
     }
 
@@ -122,15 +111,14 @@ class DeviceManager {
                 iscardswitch: isSwitch
             })
         });
-        
+
         const data = await response.json();
-        return data.id; // Retorna el ID del nuevo dispositivo
+        return data.id;
     }
 
     private createDeviceCard(deviceName: string, deviceDescription: string, isSwitch: boolean, id: string) {
         const cardContainer = document.querySelector('.row') as HTMLElement;
 
-        // Crea el HTML del dispositivo (card)
         const newCard = document.createElement('div');
         newCard.classList.add('col', 's12', 'm6');
         newCard.innerHTML = `
@@ -143,25 +131,25 @@ class DeviceManager {
                     <p>${deviceDescription}</p>
                 </div>
                 <div class="card-action" style="display: flex; align-items: center; justify-content: space-between;">
-                    ${isSwitch ? this.createSwitch(id) : this.createSlider(id)}
+                    ${isSwitch ? this.createSwitch(id, deviceName) : this.createSlider(id, deviceName)}
                     <button class="btn red remove-btn" data-id="${id}" style="margin-left: 10px;">Eliminar</button>
                 </div>
             </div>
         `;
 
-      
         cardContainer.appendChild(newCard);
 
         this.setupRemoveButtons();
-        this.setupSlider();
+        this.setupSwitches();
+        this.setupSliders();
     }
 
-    private createSwitch(id: string): string {
+    private createSwitch(id: string, name: string): string {
         return `
             <div class="switch">
                 <label>
                     Off
-                    <input type="checkbox">
+                    <input type="checkbox" data-id="${id}" data-name="${name}">
                     <span class="lever"></span>
                     On
                 </label>
@@ -169,14 +157,77 @@ class DeviceManager {
         `;
     }
 
-    private createSlider(id: string): string {
+    private createSlider(id: string, name: string): string {
         return `
             <p class="range-field" style="flex: 1;">
-                <input type="range" id="sliderValue" min="0" max="100" value="50"/>
+                <input type="range" min="0" max="100" value="50" data-id="${id}" data-name="${name}" />
             </p>
-            <span id="sliderDisplay">50</span>
+            <span id="sliderDisplay-${id}">50</span>
         `;
     }
+
+    private setupSwitches() {
+        const switches = document.querySelectorAll('input[type="checkbox"]');
+        switches.forEach(switchElement => {
+            switchElement.addEventListener('change', async (event) => {
+                const target = event.target as HTMLInputElement; // Cast to HTMLInputElement
+                const id = target.getAttribute('data-id');
+                const name = target.getAttribute('data-name');
+                const state = target.checked;
+
+                try {
+                    await this.sendDeviceData({ id, name, state });
+                } catch (error) {
+                    console.error('Error al enviar datos del switch:', error);
+                }
+            });
+        });
+    }
+
+    private setupSliders() {
+        const sliders = document.querySelectorAll('input[type="range"]');
+        sliders.forEach(slider => {
+            const id = slider.getAttribute('data-id');
+            const display = document.getElementById(`sliderDisplay-${id}`); // Obtener el elemento de visualización
+
+            slider.addEventListener('input', async (event) => {
+                const target = event.target as HTMLInputElement; // Cast to HTMLInputElement
+                const value = target.value;
+
+                try {
+                    await this.sendDeviceData({ id, name: target.getAttribute('data-name'), value });
+                } catch (error) {
+                    console.error('Error al enviar datos del slider:', error);
+                }
+
+                if (display) {
+                    display.textContent = value; // Actualiza el valor mostrado
+                }
+            });
+        });
+    }
+
+    private async sendDeviceData(data: { id: string | null, name: string | null, state?: boolean, value?: string }) {
+        try {
+            const response = await fetch('http://localhost:4000/api/device/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor.');
+            }
+
+            const result = await response.json();
+            console.log('Datos enviados correctamente:', result);
+        } catch (error) {
+            console.error('Error al enviar datos al servidor:', error);
+        }
+    }
+
 }
 
 new DeviceManager();
