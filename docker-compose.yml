@@ -1,51 +1,33 @@
-version: '3'
+version: '3.8'
 
 services:
+  frontend:
+    build:
+      context: ./src/frontend  
+      dockerfile: Dockerfile    
+    ports:
+      - "8080:80"
 
-    ts-compiler:
-        image:                   harmish/typescript
-        volumes:
-            -                    ./src/frontend/ts:/workspace 
-            -                    ./src/frontend/js:/output 
-        command:                 "tsc --project /workspace --outDir /output --watch --pretty true"
+  backend:
+    build:
+      context: ./src/backend  
+      dockerfile: Dockerfile    
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
 
-    mysql-server:
-        image:                   mysql:5.7
-        hostname:                mysql-server
-        environment:
-            MYSQL_ROOT_PASSWORD: userpass
-        volumes:
-            -                    ./db/dumps:/docker-entrypoint-initdb.d
-            -                    ./db/data:/var/lib/mysql
-        networks:
-            -                    app-fullstack-net
+  postgres:
+    image: postgres:15.3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: hades
+      POSTGRES_DB: fullstack
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
 
-    mysql-admin:
-        image:                   phpmyadmin/phpmyadmin
-        environment: 
-            PMA_HOST:            mysql-server
-            PMA_PORT:            3306
-            MYSQL_ROOT_PASSWORD: userpass
-        networks:
-            -                    app-fullstack-net
-        depends_on:
-            -                    mysql-server
-        ports:
-            -                    "8001:80"
-
-    node-backend:
-        image:                   abassi/nodejs-server:10.0-dev
-        volumes:
-            -                    ./src/backend:/home/node/app/src
-            -                    ./src/frontend:/home/node/app/static
-        networks:
-            -                    app-fullstack-net
-        depends_on:
-            -                    mysql-server
-        ports: 
-            -                    "8000:3000"
-        command:                 nodemon /home/node/app/src/index.js
-
-networks:
-    app-fullstack-net:
-        driver:                  bridge
+volumes:
+  pgdata:
