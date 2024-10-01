@@ -6,10 +6,10 @@ const db = new Database();
 
 const devicesGet = async (req: Request, res: Response) => {
     try {
-        const query = 'SELECT * FROM devices'; 
-        const result = await db.getPool().query(query); 
-        
-        res.json(result.rows); 
+        const query = 'SELECT * FROM devices';
+        const result = await db.getPool().query(query);
+
+        res.json(result.rows);
     } catch (error) {
         console.error('Error al obtener dispositivos:', error);
         res.status(500).json({ message: 'Error al obtener dispositivos' });
@@ -20,12 +20,12 @@ const devicesGet = async (req: Request, res: Response) => {
 const addDevices = async (req: any, res: any) => {
     const { name, description, iscardswitch } = req.body;
 
-    
-    if (!name ) {
+
+    if (!name) {
         return res.status(400).json({ message: 'Faltan campos requeridos o isCardSwitch no es válido' });
     }
 
-    
+
     const query = `
         INSERT INTO devices (name, description, iscardswitch)
         VALUES ($1, $2, $3)
@@ -35,11 +35,11 @@ const addDevices = async (req: any, res: any) => {
     const values = [name, description || null, iscardswitch];
 
     try {
-        
+
         const result = await db.getPool().query(query, values);
         const newDeviceId = result.rows[0].id;
 
-        
+
         res.status(201).json({ message: 'Dispositivo agregado', id: newDeviceId });
     } catch (error) {
         console.error('Error al agregar dispositivo:', error);
@@ -50,27 +50,41 @@ const addDevices = async (req: any, res: any) => {
 
 
 const deleteDevice = async (req: any, res: any) => {
-    const { id } = req.params; 
+    const { id } = req.params;
 
     if (!id) {
         return res.status(400).json({ message: 'Falta el ID del dispositivo' });
     }
 
-    const query = 'DELETE FROM devices WHERE id = $1 RETURNING id'; 
+    const query = 'DELETE FROM devices WHERE id = $1 RETURNING id';
 
     try {
-        const result = await db.getPool().query(query, [id]); 
+        const result = await db.getPool().query(query, [id]);
 
         if (result.rowCount === 0) {
-            return res.status(404).json({ message: 'Dispositivo no encontrado' }); 
+            return res.status(404).json({ message: 'Dispositivo no encontrado' });
         }
 
-        res.json({ message: 'Dispositivo eliminado', id: result.rows[0].id }); 
+        res.json({ message: 'Dispositivo eliminado', id: result.rows[0].id });
     } catch (error) {
         console.error('Error al eliminar dispositivo:', error);
-        res.status(500).json({ message: 'Error al eliminar dispositivo' }); 
+        res.status(500).json({ message: 'Error al eliminar dispositivo' });
     }
 };
 
-export { devicesGet, addDevices , deleteDevice};
+
+const handleDataDevice = async (req: Request, res: Response) => {
+    try {
+        const data = req.body;
+        console.log('Datos recibidos:', data);
+
+
+        res.status(200).json({ message: 'Datos recibidos correctamente', data });
+    } catch (error) {
+        console.error('Error al procesar la solicitud:', error);
+        res.status(500).json({ message: 'Error al procesar la solicitud' });
+    }
+};
+
+export { devicesGet, addDevices, deleteDevice, handleDataDevice };
 
