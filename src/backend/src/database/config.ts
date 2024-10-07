@@ -3,13 +3,13 @@ import { Pool } from 'pg';
 class Database {
     private pool: Pool;
 
-    constructor() {
+     constructor() {
         this.pool = new Pool({
-            user: process.env.USER || 'postgres',
-            password: process.env.PASS || 'password',
-            host: process.env.PGHOST || 'localhost',
-            port: Number(process.env.PORTDB) || 5432,
-            database: process.env.DB || 'mydatabase',
+            user: 'postgres',
+            password: 'hades',
+            host: 'postgres', // Nombre del servicio de postgres en Docker Compose
+            port: 5432, // Puerto de PostgreSQL
+            database: 'fullstack',
         });
     }
 

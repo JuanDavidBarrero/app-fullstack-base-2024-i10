@@ -12,7 +12,7 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || '3000';
+        this.port = '4000';
         this.devicePath = '/api/device'; 
 
         this.db = new Database();
